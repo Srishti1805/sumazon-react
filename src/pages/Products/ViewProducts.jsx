@@ -11,6 +11,7 @@ import { useHookstate } from '@hookstate/core';
 const ViewProducts = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
+  const [success,setSuccess] = useState(false);
   const state = useHookstate(cartState);
 
   // add item
@@ -38,7 +39,14 @@ const ViewProducts = () => {
       const url = endpoints.products + `${id}/`;
       const response = await fetch(url, requestOptions);
       const json = await response.json();
-      setProduct(json);
+      if (response.status===200){
+        setProduct(json);
+        setSuccess(true)
+      }
+      else{
+        setSuccess(false);
+      }
+      // setProduct(json);
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +55,34 @@ const ViewProducts = () => {
   useEffect(() => {
     getData();
   }, []);
-
+if(!success){
+  return (
+    <div
+      style={{
+        display: 'flex',
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+      }}
+    >
+      <Header />
+      <Box
+        style={{
+          height: '80%',
+          marginTop: '5%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          width: '100%',
+        }}
+      >
+        <h2>Item Not Found</h2>
+      </Box>
+    </div>
+  );
+  
+}
   return (
     <div
       style={{
