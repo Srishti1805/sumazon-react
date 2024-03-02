@@ -56,6 +56,10 @@ const Header = () => {
   };
   const userId = localStorage.getItem('userId');
   const username = localStorage.getItem('username');
+  const totalQuantity = state.get().reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.quantity;
+  }, 0);
+
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -78,7 +82,7 @@ const Header = () => {
           aria-label="shopping cart"
           onClick={() => navigate(`/checkout`)}
         >
-          {state.get().length}
+          {totalQuantity}
           <ShoppingCartIcon />
         </IconButton>
         <IconButton
