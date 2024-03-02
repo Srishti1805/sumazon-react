@@ -138,6 +138,23 @@ const Checkout = () => {
           ) : (
             <></>
           )}
+          {state.get().length !== 0 && (
+            <>
+              <Button
+                variant="contained"
+                // color="error"
+                onClick={handlePay}
+                style={{
+                  marginTop: '10px',
+                  marginBottom: '40px',
+                  width: '20%',
+                }}
+              >
+                Pay
+              </Button>
+              <h2> Total: {totalBill.toFixed(2)}</h2>
+            </>
+          )}
           {state.get().map((item, index) => {
             return (
               <Card
@@ -202,23 +219,6 @@ const Checkout = () => {
               </Card>
             );
           })}
-          {state.get().length !== 0 && (
-            <>
-              <h2> Total: {totalBill.toFixed(2)}</h2>
-              <Button
-                variant="contained"
-                // color="error"
-                onClick={handlePay}
-                style={{
-                  marginTop: '10px',
-                  marginBottom: '40px',
-                  width: '20%',
-                }}
-              >
-                Pay
-              </Button>
-            </>
-          )}
         </div>
       </Box>
     </div>
