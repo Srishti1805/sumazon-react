@@ -3,20 +3,26 @@ import Header from '../../components/Header/Header';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { cartState, addItem, removeItem } from '../../store/Cart';
-import { Box, Button } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { endpoints } from '../../utils/config';
 import { checkItem } from '../../utils/checkItem';
 import { useHookstate } from '@hookstate/core';
+import { Add, Remove } from '@mui/icons-material';
+import Typography from '@mui/material/Typography';
 
 const ViewProducts = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [success,setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
   const state = useHookstate(cartState);
 
   // add item
   const handleAddItem = (item) => {
-    // const newItem = { id: Date.now(), name: 'New Item' }; // Customize the item structure as needed
+    const x = state.value.find((e) => e.id === item.id);
+    if (x !== undefined && x.quantity === item.quantity) {
+      window.alert('Max quantity reached');
+      return;
+    }
     addItem(item);
   };
 
@@ -39,11 +45,10 @@ const ViewProducts = () => {
       const url = endpoints.products + `${id}/`;
       const response = await fetch(url, requestOptions);
       const json = await response.json();
-      if (response.status===200){
+      if (response.status === 200) {
         setProduct(json);
-        setSuccess(true)
-      }
-      else{
+        setSuccess(true);
+      } else {
         setSuccess(false);
       }
       // setProduct(json);
@@ -55,34 +60,33 @@ const ViewProducts = () => {
   useEffect(() => {
     getData();
   }, []);
-if(!success){
-  return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100%',
-        height: '100%',
-        flexDirection: 'column',
-      }}
-    >
-      <Header />
-      <Box
+  if (!success) {
+    return (
+      <div
         style={{
-          height: '80%',
-          marginTop: '5%',
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
           width: '100%',
+          height: '100%',
+          flexDirection: 'column',
         }}
       >
-        <h2>Item Not Found</h2>
-      </Box>
-    </div>
-  );
-  
-}
+        <Header />
+        <Box
+          style={{
+            height: '80%',
+            marginTop: '5%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
+          <h2>Item Not Found</h2>
+        </Box>
+      </div>
+    );
+  }
   return (
     <div
       style={{
@@ -108,31 +112,60 @@ if(!success){
         <img src={product.picture} width="200px" height="200px" />
         <p style={{ width: '40%' }}>{product.description}</p>
         <p>{product.price}</p>
-
-        {!checkItem(state, product.id) ? (
+        {product.quantity === 0 ? (
           <>
-            {' '}
-            <Button
+            <p
               variant="contained"
-              color="primary"
-              onClick={() => handleAddItem(product)}
+              color="error"
+              style={{ colorColor: 'orange', color: 'red' }}
             >
-              Add to Cart
-            </Button>
-            <br />
+              Out of stock
+            </p>
           </>
         ) : (
           <>
-            {' '}
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleRemoveItem(product)}
-              style={{ colorColor: 'red' }}
-            >
-              Remove Item
-            </Button>
-            <br />
+            {!checkItem(state, product.id) ? (
+              <>
+                {' '}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleAddItem(product)}
+                >
+                  Add to Cart
+                </Button>
+                <br />
+              </>
+            ) : (
+              <>
+                {' '}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    direction: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <IconButton
+                    onClick={() => handleRemoveItem(product)}
+                    disabled={!checkItem(state, product.id)}
+                  >
+                    <Remove />
+                  </IconButton>
+                  <Typography level="body-sm">
+                    {state.value.find((e) => e.id === product.id).quantity}
+                  </Typography>
+                  <IconButton
+                    onClick={() => handleAddItem(product)}
+                    disabled={product.quantity === 0}
+                  >
+                    <Add />
+                  </IconButton>
+                </div>
+                <br />
+              </>
+            )}
           </>
         )}
       </Box>

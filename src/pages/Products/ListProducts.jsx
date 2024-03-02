@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { cartState, addItem, removeItem } from '../../store/Cart';
 import { useHookstate } from '@hookstate/core';
 import { checkItem } from '../../utils/checkItem';
+import { Add, Remove } from '@mui/icons-material';
 
 const ListProducts = () => {
   const [search, setSearch] = useState();
@@ -23,7 +24,11 @@ const ListProducts = () => {
 
   // add item
   const handleAddItem = (item) => {
-    // const newItem = { id: Date.now(), name: 'New Item' }; // Customize the item structure as needed
+    const x = state.value.find((e) => e.id === item.id);
+    if (x !== undefined && x.quantity === item.quantity) {
+      window.alert('Max quantity reached');
+      return;
+    }
     addItem(item);
   };
 
@@ -117,66 +122,118 @@ const ListProducts = () => {
           ) : (
             <></>
           )}
-          {products.map(
-            (item, index) => {
-              return (
-                <Card
-                  variant="outlined"
-                  // sx={{ width: 320 }}
-                  style={{ marginTop: '16px' }}
+          {products.map((item, index) => {
+            // console.log(state.get());
+            return (
+              <Card
+                variant="outlined"
+                // sx={{ width: 320 }}
+                style={{ marginTop: '16px' }}
+              >
+                <CardOverflow
+                  style={{
+                    objectFit: 'fill',
+                  }}
                 >
-                  <CardOverflow
-                    style={{
-                      objectFit: 'fill',
-                    }}
-                  >
-                    <img src={item.picture} height="200px"width="200px" />
-                  </CardOverflow>
-                  <CardContent>
-                    <Typography level="title-md">{item.name}</Typography>
-                    <Typography level="body-sm">${item.price}</Typography>
-                    {!checkItem(state, item.id) ? (
-                      <>
-                        {' '}
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => handleAddItem(item)}
-                        >
-                          Add to Cart
-                        </Button>
-                        <br />
-                      </>
-                    ) : (
-                      <>
-                        {' '}
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() => handleRemoveItem(item)}
-                          style={{ colorColor: 'red' }}
-                        >
-                          Remove Item
-                        </Button>
-                        <br />
-                      </>
-                    )}
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ marginTop: '10px' }}
-                      onClick={() => {
-                        navigate(`/products/${item.id}`);
-                      }}
-                    >
-                      View Product
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            }
-          )}
+                  <img src={item.picture} height="200px" width="200px" />
+                </CardOverflow>
+                <CardContent>
+                  <Typography level="title-md">{item.name}</Typography>
+                  <Typography level="body-sm">${item.price}</Typography>
+                  {item.quantity === 0 ? (
+                    <>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        style={{ colorColor: 'orange' }}
+                      >
+                        Out of stock
+                      </Button>
+                      <br />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ marginTop: '10px' }}
+                        onClick={() => {
+                          navigate(`/products/${item.id}`);
+                        }}
+                      >
+                        View Product
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      {!checkItem(state, item.id) ? (
+                        <>
+                          {' '}
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleAddItem(item)}
+                          >
+                            Add to Cart
+                          </Button>
+                          <br />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginTop: '10px' }}
+                            onClick={() => {
+                              navigate(`/products/${item.id}`);
+                            }}
+                          >
+                            View Product
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {' '}
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              direction: 'row',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <IconButton
+                              onClick={() => handleRemoveItem(item)}
+                              disabled={!checkItem(state, item.id)}
+                            >
+                              <Remove />
+                            </IconButton>
+                            <Typography level="body-sm">
+                              {
+                                state.value.find((e) => e.id === item.id)
+                                  .quantity
+                              }
+                            </Typography>
+                            <IconButton
+                              onClick={() => handleAddItem(item)}
+                              disabled={item.quantity === 0}
+                            >
+                              <Add />
+                            </IconButton>
+                          </div>
+                          <br />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginTop: '10px' }}
+                            onClick={() => {
+                              navigate(`/products/${item.id}`);
+                            }}
+                          >
+                            View Product
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </Box>
     </div>
