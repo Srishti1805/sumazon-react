@@ -7,4 +7,5 @@ export const endpoints = {
   logout: `${baseURL}/logout/`,
   users: `${baseURL}/users/`,
   products: `${baseURL}/products/`,
+  order: `${baseURL}/order/`,
 };
