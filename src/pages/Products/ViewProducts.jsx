@@ -9,6 +9,7 @@ import { checkItem } from '../../utils/checkItem';
 import { useHookstate } from '@hookstate/core';
 import { Add, Remove } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
+import { toast } from 'react-toastify';
 
 const ViewProducts = () => {
   const { id } = useParams();
@@ -20,7 +21,10 @@ const ViewProducts = () => {
   const handleAddItem = (item) => {
     const x = state.value.find((e) => e.id === item.id);
     if (x !== undefined && x.quantity === item.quantity) {
-      window.alert('Max quantity reached');
+      toast.error(`Max quantity reached`, {
+        position: 'top-center',
+        autoClose: 1000,
+      });
       return;
     }
     addItem(item);

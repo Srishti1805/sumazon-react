@@ -21,7 +21,10 @@ const Checkout = () => {
     const x = products.find((e) => e.id === item.id);
     console.log(x);
     if (x !== undefined && x.quantity === item.quantity) {
-      window.alert('Max quantity reached');
+      toast.error(`Max quantity reached`, {
+        position: 'top-center',
+        autoClose: 1000,
+      });
       return;
     }
     addItem(item);

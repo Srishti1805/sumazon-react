@@ -14,6 +14,7 @@ import { cartState, addItem, removeItem } from '../../store/Cart';
 import { useHookstate } from '@hookstate/core';
 import { checkItem } from '../../utils/checkItem';
 import { Add, Remove } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 
 const ListProducts = () => {
   const [search, setSearch] = useState();
@@ -26,7 +27,10 @@ const ListProducts = () => {
   const handleAddItem = (item) => {
     const x = state.value.find((e) => e.id === item.id);
     if (x !== undefined && x.quantity === item.quantity) {
-      window.alert('Max quantity reached');
+      toast.error(`Max quantity reached`, {
+        position: 'top-center',
+        autoClose: 1000,
+      });
       return;
     }
     addItem(item);
@@ -166,6 +170,9 @@ const ListProducts = () => {
                       {!checkItem(state, item.id) ? (
                         <>
                           {' '}
+                          <Typography level="body-sm">
+                            In stock: {item.quantity}
+                          </Typography>
                           <Button
                             variant="contained"
                             color="primary"
@@ -188,6 +195,9 @@ const ListProducts = () => {
                       ) : (
                         <>
                           {' '}
+                          <Typography level="body-sm">
+                            In stock: {item.quantity}
+                          </Typography>
                           <div
                             style={{
                               display: 'flex',
