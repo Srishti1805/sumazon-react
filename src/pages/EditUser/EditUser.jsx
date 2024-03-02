@@ -13,13 +13,11 @@ const EditUser = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setImage(file);
-    console.log(image);
   };
   // const data = useState({});
   const handleSave = async (e) => {
     e.preventDefault();
 
-    console.log(typeof image);
     if (image !== undefined) {
       const data = new FormData();
       data.append('email', user.email);

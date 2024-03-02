@@ -64,7 +64,6 @@ const ListProducts = () => {
   };
   // handleSearch
   const handleSearch = async (e) => {
-    console.log(e.target.value);
     setSearch(e.target.value);
     getData(search);
   };
@@ -127,7 +126,6 @@ const ListProducts = () => {
             <></>
           )}
           {products.map((item, index) => {
-            // console.log(state.get());
             return (
               <Card
                 variant="outlined"

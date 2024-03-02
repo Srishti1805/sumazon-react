@@ -3,7 +3,6 @@ import { hookstate, useHookstate } from '@hookstate/core';
 export const cartState = hookstate([]);
 
 export const addItem = (item) => {
-  console.log(item);
   const targetId = item.id;
   const items = JSON.parse(JSON.stringify(cartState.get()));
   const existingItem = items.some((item) => item.id === targetId);

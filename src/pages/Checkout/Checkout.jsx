@@ -19,7 +19,6 @@ const Checkout = () => {
   // add item
   const handleAddItem = (item) => {
     const x = products.find((e) => e.id === item.id);
-    console.log(x);
     if (x !== undefined && x.quantity === item.quantity) {
       toast.error(`Max quantity reached`, {
         position: 'top-center',
@@ -75,7 +74,6 @@ const Checkout = () => {
       headers: headers,
     };
     const response = await fetch(endpoints.order, requestOptions);
-    console.log(response.status);
     if (response.status == 200) {
       toast.success(`Payment Success Full`, {
         position: 'top-center',
