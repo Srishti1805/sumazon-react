@@ -55,6 +55,9 @@ const Checkout = () => {
   const handleRemoveItem = (item) => {
     removeItem(item);
   };
+  const totalBill = state.get().reduce((accumulator, currentItem) => {
+    return accumulator + currentItem.price * currentItem.quantity;
+  }, 0);
   // const handlePay
   const handlePay = async (e) => {
     toast.success(`Payment Success Full`, {
@@ -172,10 +175,7 @@ const Checkout = () => {
           })}
           {state.get().length !== 0 && (
             <>
-              <h2>
-                {' '}
-                Total: {state.get().reduce((sum, item) => sum + item.price, 0)}
-              </h2>
+              <h2> Total: {totalBill}</h2>
               <Button
                 variant="contained"
                 // color="error"
