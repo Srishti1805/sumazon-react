@@ -60,12 +60,40 @@ const Checkout = () => {
   }, 0);
   // const handlePay
   const handlePay = async (e) => {
-    toast.success(`Payment Success Full`, {
-      position: 'top-center',
-      autoClose: 1000,
-    });
-    state.set([]);
-    navigate('/products');
+    // api call
+    e.preventDefault();
+    const headers = {
+      'Content-Type': `application/json`,
+      Authorization: `Bearer ${localStorage.getItem(`accessToken`)}`,
+    };
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify(state.get()),
+      headers: headers,
+    };
+    const response = await fetch(endpoints.order, requestOptions);
+    console.log(response.status);
+    if (response.status == 200) {
+      toast.success(`Payment Success Full`, {
+        position: 'top-center',
+        autoClose: 1000,
+      });
+      state.set([]);
+      navigate('/products');
+    } else {
+      const json = await response.json();
+      toast.error(`${JSON.stringify(json)}`, {
+        position: 'top-center',
+        autoClose: 1000,
+      });
+      return;
+    }
+    // toast.success(`Payment Success Full`, {
+    //   position: 'top-center',
+    //   autoClose: 1000,
+    // });
+    // state.set([]);
+    // navigate('/products');
   };
 
   return (
@@ -175,7 +203,7 @@ const Checkout = () => {
           })}
           {state.get().length !== 0 && (
             <>
-              <h2> Total: {totalBill}</h2>
+              <h2> Total: {totalBill.toFixed(2)}</h2>
               <Button
                 variant="contained"
                 // color="error"
