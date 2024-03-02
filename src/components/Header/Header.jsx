@@ -60,7 +60,13 @@ const Header = () => {
     <AppBar position="fixed">
       <Toolbar>
         {/* Left: Title */}
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography
+          onClick={() => navigate(`/products`)}
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1 }}
+          style={{ cursor: 'pointer' }}
+        >
           Sumazon Hi {username}!
         </Typography>
 
