@@ -115,7 +115,7 @@ const ViewProducts = () => {
         <h1>{product.name}</h1>
         <img src={product.picture} width="200px" height="200px" />
         <p style={{ width: '40%' }}>{product.description}</p>
-        <p>{product.price}</p>
+        <p>${product.price}</p>
         {product.quantity === 0 ? (
           <>
             <p

@@ -65,7 +65,7 @@ const ListProducts = () => {
   // handleSearch
   const handleSearch = async (e) => {
     setSearch(e.target.value);
-    getData(search);
+    getData(e.target.value);
   };
   useEffect(() => {
     getData();
